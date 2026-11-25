@@ -1,8 +1,8 @@
-import express from "express";
-import path from "path";
-import db from "./config/connection.js";
-import routes from "./routes/index.js";
-import "dotenv/config";
+import 'dotenv/config';
+import express from 'express';
+import './config/connection.js';
+import noteRoutes from './routes/noteRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,8 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // if we're in production, serve client/build as static assets
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(import.meta.dirname, "../client/build")));
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(import.meta.dirname, '../client/build')));
 }
 
 app.use(routes);
