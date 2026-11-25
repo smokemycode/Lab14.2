@@ -41,7 +41,7 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: 'No note found with this id!' });
     }
     // only the owner may update the note
-    if (note.user?.toString() !== req.user.id) {
+    if (note.user?.toString() !== req.user._id) {
       return res.status(403).json({ message: 'User is not authorized to update this note!' });
     }
     // owner confirmed, update the note
