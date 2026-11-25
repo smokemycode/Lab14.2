@@ -35,14 +35,20 @@ router.post("/", async (req, res) => {
 // PUT /api/notes/:id - Update a note
 router.put("/:id", async (req, res) => {
 	try {
-		// This needs an authorization check
-		const note = await Note.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-		});
-		if (!note) {
-			return res.status(404).json({ message: "No note found with this id!" });
-		}
-		res.json(note);
+		// find the note
+    const note = await Note.findById(req.params.id);
+    if (!note) {
+      return res.status(404).json({ message: 'No note found with this id!' });
+    }
+    // only the owner may update the note
+    if (note.user?.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'User is not authorized to update this note!' });
+    }
+    // owner confirmed, update the note
+    const { user, ...updates } = req.body; // Exclude the user field from updates
+    note.set(updates);
+    const updated = await note.save();
+    res.json(updated);
 	} catch (err) {
 		res.status(500).json(err);
 	}
