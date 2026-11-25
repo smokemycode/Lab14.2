@@ -5,7 +5,7 @@ const secret = process.env.JWT_SECRET;
 const expiration = '2h';
 
 // checks the token on every protected route to see if the user is logged in
-export function authMiddleware(req, res) {
+export function authMiddleware(req, res, next) {
 		let token = req.body?.token || req.query.token || req.headers.authorization;
 
 		if (req.headers.authorization) {
@@ -23,6 +23,8 @@ export function authMiddleware(req, res) {
 			console.log('Invalid token');
 			return res.status(401).json({ message: 'Invalid token.' });
 		}
+
+    next();
   }
 
 	export function signToken({ username, email, _id }) {
